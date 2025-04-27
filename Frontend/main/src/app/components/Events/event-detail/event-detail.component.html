@@ -1,0 +1,68 @@
+<!-- Breadcrumb intégré directement -->
+<mat-card class="cardWithShadow overflow-hidden" style="width:80vw; height:100vh;">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Ajouter un évènement</mat-card-title>
+  </mat-card-header>
+
+      <!-- Image principale -->
+      <div class="position-relative">
+        <img
+          mat-card-image
+          src="https://via.placeholder.com/800x300"
+          alt="Event Main"
+          class="w-100"
+        />
+      </div>
+
+      <mat-card-content class="p-y-24">
+
+        <!-- Titre -->
+        <mat-card-title class="m-t-20 text-hover-primary cursor-pointer">
+          Sample Event Title
+        </mat-card-title>
+
+        <!-- Infos principales -->
+        <div class="d-flex align-items-center justify-content-between m-t-24">
+          <span class="f-s-14 d-flex align-items-center">
+            <i-tabler name="calendar" class="icon-18 m-r-4"></i-tabler>
+            Start: 2025-06-01
+          </span>
+          <span class="f-s-14 d-flex align-items-center">
+            <i-tabler name="calendar" class="icon-18 m-r-4"></i-tabler>
+            End: 2025-06-05
+          </span>
+        </div>
+
+        <!-- Organisateur -->
+        <div class="d-flex align-items-center m-t-12">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="Organisateur Photo"
+            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"
+            class="m-r-8"
+          />
+          <span class="f-s-14 f-w-600">John Doe</span>
+        </div>
+
+        <!-- Description -->
+        <div class="m-t-24">
+          <h5 class="f-w-600">Description</h5>
+          <p class="m-t-8">
+            This is a static description of the event. It is amazing and you should definitely attend!
+          </p>
+        </div>
+
+        <!-- Salons -->
+        <div class="m-t-24">
+          <h5 class="f-w-600">Salons</h5>
+          <ul class="m-t-8">
+            <li>Salon A</li>
+            <li>Salon B</li>
+            <li>Salon C</li>
+          </ul>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+

@@ -1,29 +1,19 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
-import {ListEventComponent} from "./components/Events/list-event/list-event.component";
-import {ListParticipantComponent} from "./components/Participants/list-participant/list-participant.component";
-import {AppSideLoginComponent} from "./pages/authentication/side-login/side-login.component";
-import {AppSideRegisterComponent} from "./pages/authentication/side-register/side-register.component";
-import {AddEventComponent} from "./components/Events/add-event/add-event.component";
-import {EventDetailComponent} from "./components/Events/event-detail/event-detail.component";
-import {ListTicketComponent} from "./components/Tickets/list-ticket/list-ticket.component";
+import { ListEventComponent } from "./components/Events/list-event/list-event.component";
+import { ListParticipantComponent } from "./components/Participants/list-participant/list-participant.component";
+import { AddEventComponent } from "./components/Events/add-event/add-event.component";
+import { EventDetailComponent } from "./components/Events/event-detail/event-detail.component";
+import { ListTicketComponent } from "./components/Tickets/list-ticket/list-ticket.component";
+import { AppSideLoginComponent } from './pages/authentication/side-login/side-login.component';
+import { AppSideRegisterComponent } from './pages/authentication/side-register/side-register.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login', // Redirige vers la page d'accueil par défaut
+    redirectTo: '/login',
     pathMatch: 'full',
-  },
-  {
-   path: 'login', // Route vers la page d'accueil
-    component: AppSideLoginComponent,
-  },
-
-
-  {
-    path: 'inscription', // Route vers la page d'inscription
-    component: AppSideRegisterComponent,
   },
   {
     path: '',
@@ -39,29 +29,26 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/pages.routes').then((m) => m.PagesRoutes),
       },
-
-
       {
         path: 'event/listEvent',
-        component: ListEventComponent, // Liste des participants
+        component: ListEventComponent,
       },
       {
         path: 'event/addEvent',
-        component: AddEventComponent, // Liste des participants
+        component: AddEventComponent,
       },
       {
         path: 'participant/listParticipant',
-        component: ListParticipantComponent, // Liste des participants
+        component: ListParticipantComponent,
       },
       {
         path: 'event/EventDetail',
-        component: EventDetailComponent, // Liste des participants
+        component: EventDetailComponent,
       },
       {
         path: 'event/Tickets',
-        component: ListTicketComponent, // Liste des participants
+        component: ListTicketComponent,
       },
-
       {
         path: 'extra',
         loadChildren: () =>
@@ -86,5 +73,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'authentication/error',
   },
-
 ];

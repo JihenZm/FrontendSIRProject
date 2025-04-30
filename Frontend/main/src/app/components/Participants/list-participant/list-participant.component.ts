@@ -1,56 +1,63 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
-import { MaterialModule } from 'src/app/material.module';
+import { Component, OnInit } from '@angular/core';
+import { UserService, Utilisateur } from 'src/app/services/user.service';
+import {
+  MatCardModule,
+  MatCardContent,
+  MatCardTitle
+} from '@angular/material/card';
+import {
+  MatTableModule,
+  MatTableDataSource
+} from '@angular/material/table';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 
-// table 1
-export interface productsData {
-  id: number;
-  imagePath: string;
-  prenom: string;
-  nom: string;
-  email: string;
-}
-
-const PRODUCT_DATA: productsData[] = [
-  {
-    id: 1,
-    imagePath: 'assets/images/products/product-1.png',
-    prenom: 'Jihen',
-    nom: 'ZEMZEM',
-    email: 'jihenzemzem@gmail.com',
-   
-  },
-  {
-    id: 2,
-    imagePath: 'assets/images/products/product-2.png',
-    prenom: 'Amir ',
-    nom: 'AL MAMMA',
-    email: 'helloamir@gmail.com',
-  
-  },
- 
-];
 @Component({
   selector: 'app-list-participant',
-  imports: [ MatTableModule,
+  standalone: true,
+  templateUrl: './list-participant.component.html',
+  styleUrls: ['./list-participant.component.scss'],
+  imports: [
     CommonModule,
     MatCardModule,
-    MaterialModule,
+    MatCardTitle,
+    MatCardContent,
+    MatTableModule,
     MatIconModule,
-    MatMenuModule,
-    MatButtonModule,],
-  templateUrl: './list-participant.component.html',
-  standalone: true,
-  styleUrl: './list-participant.component.scss'
+    MatButtonModule,
+    NgOptimizedImage
+  ]
 })
-export class ListParticipantComponent {
-// table 1
-  displayedColumns1: string[] = [ 'prenom', 'nom', 'email','action'];
-  dataSource1 = PRODUCT_DATA;
-}
+export class ListParticipantComponent implements OnInit {
+  displayedColumns1: string[] = ['prenom', 'nom', 'email', 'action'];
+  dataSource1 = new MatTableDataSource<Utilisateur>();
 
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.getUtilisateurs().subscribe({
+      next: (data) => {
+        console.log('Utilisateurs récupérés :', data);
+
+        // Simuler le champ "role"
+        const utilisateursSimulés = data.map(user => ({
+          ...user,
+          role: user.email?.toLowerCase().includes('organ') ? 'organisateur' : 'user'
+        }));
+
+        // Filtrer uniquement les utilisateurs
+        const participants = utilisateursSimulés.filter(u => u.role === 'user');
+
+        if (participants.length === 0) {
+          console.warn('Aucun utilisateur avec le rôle "user" trouvé.');
+        }
+
+        this.dataSource1.data = participants;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des utilisateurs', err);
+      }
+    });
+  }
+}

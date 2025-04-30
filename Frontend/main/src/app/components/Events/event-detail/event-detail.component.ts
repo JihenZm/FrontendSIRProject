@@ -1,44 +1,58 @@
-import { Component } from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {TablerIconsModule} from "angular-tabler-icons";
-import {MatDivider} from "@angular/material/divider";
+import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import { EvenementService, Evenement } from 'src/app/services/evenement.service';
+import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
+import { TablerIconsModule } from "angular-tabler-icons";
+import { MatDivider } from "@angular/material/divider";
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-event-detail',
+  standalone: true,
   imports: [
+    CommonModule,
     MatCard,
     MatCardContent,
+    MatCardHeader,
     MatCardTitle,
-    TablerIconsModule,
     MatDivider,
-    MatCardHeader
+    TablerIconsModule,
+    RouterLink,
+    MatCardImage,
+    NgOptimizedImage,
+    MatButton
   ],
   templateUrl: './event-detail.component.html',
-  standalone: true,
   styleUrl: './event-detail.component.scss'
 })
+export class EventDetailComponent implements OnInit {
 
-export class EventDetailComponent {
+  event?: Evenement; //  Utiliser Evenement de ton service
+  eventId!: number; // id de l'événement récupéré de l'URL
 
-  eventDetails = {
-    photoEvenement: 'https://via.placeholder.com/600x200',
-    data: {
-      photoOrganisateur: 'https://via.placeholder.com/100',
-      OrganisatorNom: 'John Doe',
-      nom: 'Sample Event Title',
-      debut: '2025-06-01',
-      fin: '2025-06-05',
-      description: 'This is a static description of the event. It is amazing and you should definitely attend!',
-      salons: [
-        { nom: 'Salon A' },
-        { nom: 'Salon B' },
-        { nom: 'Salon C' }
-      ]
-    }
-  };
+  constructor(
+    private route: ActivatedRoute,
+    private evenementService: EvenementService
+  ) {}
 
-  getImageUrl(imagePath: string): string {
-    return imagePath;
+  ngOnInit() {
+    this.eventId = Number(this.route.snapshot.paramMap.get('id'));
+    this.getEventDetails();
   }
+
+  getEventDetails() {
+    this.evenementService.getEvenementById(this.eventId).subscribe({
+      next: (data) => {
+        this.event = data;
+        console.log('Événement chargé:', this.event);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération de l\'événement', error);
+      }
+    });
+  }
+
+
 
 }

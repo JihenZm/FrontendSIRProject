@@ -1,66 +1,54 @@
-<div class="container-fluid p-0 m-0">
-<mat-card class="cardWithShadow w-100">
-  <mat-card-content>
-    <mat-card-title>Participants</mat-card-title>
+<div class="container-fluid p-0 m-0" style="width: 90vw;">
+  <mat-card class="cardWithShadow" style="width: 90%;">
+    <mat-card-content>
+      <mat-card-title>Participants</mat-card-title>
 
-    <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource1" class="w-100">
-        <!-- Position Column -->
-        <ng-container matColumnDef="prenom">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14 p-l-0">
-            Prénom
-          </th>
-          <td mat-cell *matCellDef="let element" class="p-l-0">
-            <div class="d-flex align-items-center">
-              <img [src]="element.imagePath" alt="users" width="60" class="rounded" />
-              <div class="m-l-16">
-                <h6 class="f-s-14 f-w-600">
-                  {{ element.prenom }}
-                </h6>
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource1" class="w-100">
+
+          <!-- Colonne Prénom -->
+          <ng-container matColumnDef="prenom">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14 p-l-0">Prénom</th>
+            <td mat-cell *matCellDef="let element" class="p-l-0">
+              <div class="d-flex align-items-center">
+                <img src="assets/images/profile/user-2.jpg" alt="user" width="40" class="rounded-7" />
+                <div class="m-l-16">
+                  <h6 class="f-s-14 f-w-600">{{ element.prenom }}</h6>
+                </div>
               </div>
-            </div>
-          </td>
-        </ng-container>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="nom">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14">
-            Nom
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.nom }}
-          </td>
-        </ng-container>
-        <!-- Name Column -->
+          <!-- Colonne Nom -->
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14">Nom</th>
+            <td mat-cell *matCellDef="let element">{{ element.nom }}</td>
+          </ng-container>
 
+          <!-- Colonne Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14">Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+          </ng-container>
 
-        <!-- Weight Column -->
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14">
-            Email
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.email }}
-          </td>
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-14">Actions</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" class="bg-light-success">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" class="bg-light-error">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-        </ng-container>
-
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="action">
-          <th mat-header-cell class="mat-mdc-header-cell mdc-data-table__header-cell cdk-header-cell f-s-16 f-w-600 cdk-column-name mat-column-name ng-star-inserted" *matHeaderCellDef>Action</th>
-          <td mat-cell *matCellDef="let participant">
-            <button mat-icon-button class="bg-light-success">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button  class="bg-light-error">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
-      </table>
-    </div>
-  </mat-card-content>
-</mat-card>
+          <!-- Affichage des lignes -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

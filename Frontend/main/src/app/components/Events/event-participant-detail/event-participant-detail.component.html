@@ -48,12 +48,13 @@
         <li>Prix : {{ event?.prix | currency:'EUR' }}</li>
         <li>Capacité : {{ event?.popularite }} personnes</li>
       </ul>
-      <div class="m-t-20" *ngIf="eventId">
-        <button mat-stroked-button color="primary" [routerLink]="['/event/Tickets', eventId]">
-          Voir tous les tickets
-        </button>
-      </div>
+      <div class="m-t-20" routerLink='event/Tickets'>
 
+        <button mat-raised-button color="primary" (click)="reserverTicket()">
+          Réserver un ticket
+        </button>
+
+      </div>
 
     </mat-card-content>
 
@@ -126,4 +127,14 @@
   .m-t-20 {
     margin-top: 20px;
   }
+  ::ng-deep .snackbar-success {
+    background-color: #4caf50;
+    color: #fff;
+  }
+
+  ::ng-deep .snackbar-error {
+    background-color: #f44336;
+    color: #fff;
+  }
+
 </style>

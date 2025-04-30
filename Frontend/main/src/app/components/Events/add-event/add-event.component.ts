@@ -1,82 +1,107 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {MatButton} from "@angular/material/button";
-import {MatInput} from "@angular/material/input";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import {RouterLink} from "@angular/router";
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EvenementService } from 'src/app/services/evenement.service';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
 @Component({
   selector: 'app-add-event',
   templateUrl: './add-event.component.html',
   styleUrls: ['./add-event.component.scss'],
+  standalone: true,
   imports: [
-    MatCardContent,
-    MatCardTitle,
-    MatCardHeader,
-    MatCard,
-    MatLabel,
-    MatFormField,
-    MatDatepickerToggle,
-    MatDatepickerInput,
-    MatDatepicker,
-    FormsModule,
-    MatButton,
-    MatInput,
-    MatOption,
-    MatSelect, MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
+    CommonModule,
     ReactiveFormsModule,
-    MatRadioModule,
-    MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule, MatDatepickerInput, RouterLink,
-  ],
-  standalone: true
+    MatSelectModule,
+    MatButtonModule,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatDatepicker,
+    RouterLink,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule
+  ]
 })
 export class AddEventComponent {
+  eventForm: FormGroup;
 
-  country: Food[] = [
-    { value: 'steak-0', viewValue: 'USA' },
-    { value: 'pizza-1', viewValue: 'India' },
-    { value: 'tacos-2', viewValue: 'France' },
-    { value: 'tacos-3', viewValue: 'UK' },
-  ];
+  constructor(
+    private fb: FormBuilder,
+    private eventService: EvenementService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
+    this.eventForm = this.fb.group({
+      titre: ['', Validators.required],
+      lieu: ['', Validators.required],
+      date: ['', Validators.required],
+      description: [''],
+      prix: [0, [Validators.required, Validators.min(0)]],
+      popularite: [0],
+      capacite: [0],
+      organisateurId: [1, Validators.required],
+      ticketIds: [[]]
+    });
+  }
 
-  selectedCountry = this.country[2].value;
+  /** Formate la date pour le backend Spring : yyyy-MM-dd */
+  private formatDate(date: Date): string {
+    console.log('📅 Date avant conversion :', date);
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-  city: Food[] = [
-    { value: 'steak-0', viewValue: 'Mexico' },
-    { value: 'pizza-1', viewValue: 'Mumbai' },
-    { value: 'tacos-2', viewValue: 'Tokyo' },
-    { value: 'tacos-3', viewValue: 'New York' },
-  ];
+  onSubmit() {
+    if (this.eventForm.invalid) return;
 
-  selectedCity = this.city[1].value;
+    const formData = this.eventForm.value;
 
-  state: Food[] = [
-    { value: 'steak-0', viewValue: 'Cuba' },
-    { value: 'pizza-1', viewValue: 'Djibouti' },
-    { value: 'tacos-2', viewValue: 'Bulgaria' },
-    { value: 'tacos-3', viewValue: 'Cabo Verde' },
-  ];
+    const evenement = {
+      titre: formData.titre,
+      lieu: formData.lieu,
+      date: this.formatDate(formData.date), // ✅ conversion nécessaire
+      description: formData.description,
+      prix: formData.prix,
+      popularite: formData.popularite,
+      capacite: formData.capacite,
+      organisateur: { id: formData.organisateurId },
+      tickets: formData.ticketIds.map((id: number) => ({ id }))
+    };
 
-  selectedState = this.state[3].value;
+    console.log('🎯 Événement envoyé :', evenement); // 🔍 debug utile
+
+    this.eventService.addEvenement(evenement).subscribe({
+      next: () => {
+        this.snackBar.open('🎉 Événement créé avec succès !', 'Fermer', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.router.navigate(['/event/listEvent']);
+      },
+      error: err => {
+        console.error('❌ Erreur lors de l\'ajout', err);
+        this.snackBar.open('❌ Une erreur est survenue.', 'Fermer', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+      }
+    });
+  }
 }

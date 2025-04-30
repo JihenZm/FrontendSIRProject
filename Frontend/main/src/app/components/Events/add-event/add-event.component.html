@@ -1,57 +1,67 @@
-
-
 <mat-card class="cardWithShadow theme-card">
   <mat-card-header>
     <mat-card-title class="m-b-0">Ajouter un évènement</mat-card-title>
   </mat-card-header>
+
   <mat-card-content class="b-t-1">
-    <form>
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
       <div class="row">
+        <!-- Titre -->
         <div class="col-lg-6">
-          <!-- input -->
           <mat-label class="f-w-600 m-b-8 d-block">Titre</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput placeholder="Titre " />
+            <input matInput  formControlName="titre" />
           </mat-form-field>
         </div>
+
+        <!-- Description -->
         <div class="col-lg-6">
-          <mat-label class="f-w-600 m-b-8 d-block">Genre</mat-label>
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-select [(value)]="selectedCountry">
-              @for(option of country; track option.value) {
-                <mat-option [value]="option.value">{{
-                    option.viewValue
-                  }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-lg-6">
-          <!-- input -->
-          <mat-label class="f-w-600 m-b-8 d-block">Prix</mat-label>
+          <mat-label class="f-w-600 m-b-8 d-block">Description</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="email" placeholder="Prix" />
+            <input matInput  formControlName="description" />
           </mat-form-field>
         </div>
+
+        <!-- Prix -->
+        <div class="col-lg-6">
+          <mat-label class="f-w-600 m-b-8 d-block">Prix (€)</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="number" formControlName="prix" />
+          </mat-form-field>
+        </div>
+
+        <!-- Popularité -->
+        <div class="col-lg-6">
+          <mat-label class="f-w-600 m-b-8 d-block">Capacité</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="number" formControlName="popularite" />
+          </mat-form-field>
+        </div>
+
+
+        <!-- Lieu -->
+        <div class="col-lg-6">
+          <mat-label class="f-w-600 m-b-8 d-block">Lieu</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput  formControlName="lieu" />
+          </mat-form-field>
+        </div>
+
+        <!-- Date -->
         <div class="col-lg-6">
           <mat-label class="f-w-600 m-b-8 d-block">Date</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="password" placeholder="Lieu" />
+            <input matInput [matDatepicker]="picker" formControlName="date" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="col-lg-6">
-          <!-- input -->
-          <mat-label class="f-w-600 m-b-8 d-block">Lieu</mat-label>
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="password" placeholder="Lieu" />
-          </mat-form-field>
-        </div>
-
       </div>
 
+      <!-- Boutons -->
       <div class="m-t-12">
-        <button mat-flat-button color="primary" class="m-r-8">Ajouter</button>
-        <button mat-stroked-button color="warn">Annuler</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="eventForm.invalid">Ajouter</button>
+        <button mat-stroked-button color="warn" type="button" routerLink="/event/listEvent">Annuler</button>
       </div>
     </form>
   </mat-card-content>

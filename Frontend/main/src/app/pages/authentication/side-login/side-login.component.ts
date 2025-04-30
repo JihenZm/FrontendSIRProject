@@ -3,8 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service'; // ⚡ On importe ton service UserService
 
 @Component({
   selector: 'app-side-login',
@@ -13,11 +13,15 @@ import { ReactiveFormsModule } from '@angular/forms';
   standalone: true
 })
 export class AppSideLoginComponent {
-  constructor(private router: Router) {}
+
+  constructor(
+    private router: Router,
+    private userService: UserService // ⚡ Injection du service UserService
+  ) {}
 
   form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    motdepasse: new FormControl('', [Validators.required]),
   });
 
   get f() {
@@ -25,6 +29,38 @@ export class AppSideLoginComponent {
   }
 
   submit() {
-    this.router.navigate(['']);
-  }
+    if (this.form.invalid) {
+      return;
+    }
+
+    const loginData = {
+      email: this.form.value.email,
+      motdepasse: this.form.value.motdepasse
+    };
+
+    this.userService.login(loginData.email!, loginData.motdepasse!).subscribe({
+      next: (response) => {
+        console.log('Connexion réussie', response);
+
+        // Redirection selon le rôle
+        if (response.role === 'user') {
+          this.router.navigate(['/participant/event/EventParticipant']);
+        } else if (response.role === 'organisateur') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          console.error('Rôle non reconnu');
+          alert('Rôle non reconnu.');
+        }
+      },
+      error: (error) => {
+        if (error.status === 401) {
+          alert('Identifiants invalides. Veuillez réessayer.');
+        } else {
+          alert('Erreur lors de la connexion.');
+        }
+        console.error('Erreur lors de la connexion', error);
+      }
+    });
+
+}
 }

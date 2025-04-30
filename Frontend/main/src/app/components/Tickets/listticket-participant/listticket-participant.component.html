@@ -1,59 +1,61 @@
 <mat-card class="cardWithShadow overflow-hidden" style="width:80vw; height:100vh;">
   <mat-card-content>
-    <mat-card-title class="m-b-4">Tickets</mat-card-title>
+    <mat-card-title class="m-b-4">Tickets réservés</mat-card-title>
   </mat-card-content>
 
-  <div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" class="w-100">
+  <div class="table-responsive p-4">
+    <table mat-table [dataSource]="dataSource" class="w-100" matSort>
 
-      <!-- Colonne utilisateur (acheteur) -->
-      <ng-container matColumnDef="products">
-        <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">Acheteur</th>
+      <!-- Colonne Événement -->
+      <ng-container matColumnDef="evenement">
+        <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">Événement</th>
         <td mat-cell *matCellDef="let element">
-          <div class="d-flex align-items-center">
-            <img src="assets/images/profile/user-2.jpg" alt="user" width="40" class="rounded-7" />
-
-              <h6 class="mat-subtitle-1 f-s-14 lh-sm">
-                {{ element.acheteur?.prenom || 'Utilisateur' }} {{ element.acheteur?.nom || '' }}
-              </h6>
-
-
-          </div>
+          <h6 class="mat-subtitle-1 text-truncate-2 f-s-14 lh-sm">
+            {{ element.evenement?.nom }}
+          </h6>
         </td>
       </ng-container>
+
+      <!-- ✅ Nouvelle Colonne Place -->
       <ng-container matColumnDef="place">
         <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">Place</th>
         <td mat-cell *matCellDef="let element">
           {{ element.place }}
         </td>
       </ng-container>
+
       <!-- Colonne Paiement -->
-      <ng-container matColumnDef="payment">
+      <ng-container matColumnDef="paiement">
         <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">Paiement</th>
         <td mat-cell *matCellDef="let element">
           <h6 class="mat-subtitle-1 f-s-16">{{ element.prix }} €</h6>
-
 
         </td>
       </ng-container>
 
       <!-- Colonne Statut -->
+
+
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">Statut</th>
+        <th mat-header-cell *matHeaderCellDef class="mat-subtitle-1 f-s-14">
+          Statut
+        </th>
         <td mat-cell *matCellDef="let element">
-          <span
-            class="f-s-12 f-w-500 p-x-10 p-y-4 rounded-pill"
-            [ngClass]="element.acheter ? 'bg-light-success text-success' : 'bg-light-warn text-warn'">
-            {{ element.acheter ? 'payé' : 'réservé' }}
-          </span>
+    <span
+      class="bg-light-{{ element.acheter ? 'success' : 'warn' }} text-{{ element.acheter ? 'success' : 'warn' }} f-s-12 f-w-500 p-x-10 p-y-4 rounded-pill">
+      {{ element.acheter ? 'Payé' : 'Réservé' }}
+    </span>
         </td>
       </ng-container>
+
+
+
 
       <!-- Colonne Menu -->
       <ng-container matColumnDef="menu">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu" xPosition="before">

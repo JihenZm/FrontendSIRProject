@@ -1,48 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../../../material.module';
+import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
-import { TicketService, Ticket } from 'src/app/services/ticket.service';
+import {Ticket, TicketService} from 'src/app/services/ticket.service';
+import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-list-ticket',
   standalone: true,
   templateUrl: './list-ticket.component.html',
-  styleUrl: './list-ticket.component.scss',
+  styleUrls: ['./list-ticket.component.scss'],
   imports: [
     CommonModule,
-    MaterialModule,
+    MatTableModule,
     MatMenuModule,
     MatButtonModule,
-    TablerIconsModule,
-    MatProgressBarModule,
-    NgScrollbarModule
+    MatIconModule,
+    MatCardTitle,
+    MatCardContent,
+    MatCard
   ]
 })
 export class ListTicketComponent implements OnInit {
-  displayedColumns: string[] = ['products','place', 'payment', 'status', 'menu'];
   dataSource = new MatTableDataSource<Ticket>();
+  displayedColumns: string[] = ['products', 'place', 'payment', 'status', 'menu'];
 
   constructor(
-    private ticketService: TicketService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ticketService: TicketService
   ) {}
 
   ngOnInit(): void {
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
+    console.log('Event ID depuis l’URL :', eventId);
+
     this.ticketService.getAllTickets().subscribe({
       next: (tickets) => {
-        const eventTickets = tickets.filter(t => t.evenement?.id === eventId);
-        this.dataSource.data = eventTickets;
+        const filtered = tickets.filter(t => t.evenementId === eventId);
+        this.dataSource.data = filtered;
+        console.log('Tickets filtrés :', filtered);
       },
       error: (err) => {
-        console.error('Erreur récupération tickets :', err);
+        console.error('Erreur lors de la récupération des tickets :', err);
       }
     });
   }

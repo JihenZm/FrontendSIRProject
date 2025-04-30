@@ -1,34 +1,42 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
+
 export interface Ticket {
   prix: number;
   place: string;
   acheter: boolean;
-  dateAchat: string; // ISO string
-  evenement: { id: number };
-  acheteur: { id: number };
+  dateAchat: string;
+  acheteurId: number;       // 👈 au lieu de acheteur: { id: number }
+  evenementId: number;      // 👈 au lieu de evenement: { titre: string }
 }
+export interface TicketCreate {
+  prix: number;
+  place: string;
+  acheter: boolean;
+  dateAchat: string;
+  acheteur: { id: number };
+  evenement: { id: number };
+}
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class TicketService {
-  private apiUrl = '/ticket'; // à adapter selon ton backend
+  private apiUrl = '/ticket'; // URL complète
 
   constructor(private http: HttpClient) {}
 
-  reserverTicket(ticket: Ticket): Observable<Ticket> {
-    return this.http.post<Ticket>(this.apiUrl, ticket);
+  getAllTickets(): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(this.apiUrl);
   }
-  // GET : récupérer un ticket par son ID
+
   getTicketById(id: number): Observable<Ticket> {
     return this.http.get<Ticket>(`${this.apiUrl}/${id}`);
   }
 
-  // GET : récupérer tous les tickets
-  getAllTickets(): Observable<Ticket[]> {
-    return this.http.get<Ticket[]>(this.apiUrl);
+  reserverTicket(ticket: TicketCreate): Observable<Ticket> {
+    return this.http.post<Ticket>(this.apiUrl, ticket);
   }
 }

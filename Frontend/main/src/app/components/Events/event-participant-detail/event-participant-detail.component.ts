@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EvenementService, Evenement } from 'src/app/services/evenement.service';
-import { TicketService, Ticket } from 'src/app/services/ticket.service';
+import { TicketService } from 'src/app/services/ticket.service'; // On importe juste le service ici
 import { formatISO } from 'date-fns';
 
 import { MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle } from '@angular/material/card';
@@ -74,16 +74,17 @@ export class EventParticipantDetailComponent implements OnInit {
 
     const userId = 3; // à remplacer dynamiquement
 
-    const ticket: Ticket = {
+    // ✅ on crée un objet avec le format attendu par le backend
+    const ticketToPost = {
       prix: this.event.prix,
       place: this.genererPlaceAleatoire(),
       acheter: false,
       dateAchat: formatISO(new Date()),
-      evenement: { id: this.event.id! },
-      acheteur: { id: userId }
+      acheteur: { id: userId },
+      evenement: { id: this.event.id! }
     };
 
-    this.ticketService.reserverTicket(ticket).subscribe({
+    this.ticketService.reserverTicket(ticketToPost).subscribe({
       next: () => {
         this.snackBar.open('🎫 Ticket réservé avec succès !', 'Fermer', {
           duration: 4000,

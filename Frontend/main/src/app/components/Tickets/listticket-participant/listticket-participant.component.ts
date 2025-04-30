@@ -73,7 +73,7 @@ export class ListticketParticipantComponent implements OnInit {
   ngOnInit(): void {
     this.ticketService.getAllTickets().subscribe({
       next: (tickets) => {
-        const userTickets = tickets.filter(ticket => ticket.acheteur?.id === this.userId);
+        const userTickets = tickets.filter(ticket => ticket.acheteurId === this.userId);
         this.dataSource.data = userTickets;
       },
       error: (err) => {
